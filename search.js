@@ -29,6 +29,6 @@ module.exports = (query, offset, callback) => {
     })
     .catch((err) => {
       console.log(err);
-      return callback(`Error searching for "${query}"`);
+      return callback({error: `Error searching for "${query}": ${err}`});
     });
 };

@@ -16,7 +16,7 @@ const searchTerm = require('./models/searchTerm');
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/static', express.static(__dirname + '/public'));
+app.use(express.static('public'));
 
 
 /* ================== DB CONNECTION ================== */
@@ -35,7 +35,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 /* ================== ROUTES ================== */
 
 // get all recent search terms
-app.get('/api/recentsearches', (req, res, next) => {
+app.get('/api/recent', (req, res, next) => {
 	searchTerm.find({}, (err, data) => {
 		if (err) {
 			data.error = 'Could not find recent search terms';
@@ -61,7 +61,11 @@ app.get('/api/search/:searchVal*', (req, res, next) => {
 	});
 
 	search(searchVal, offset, (data) => {
-    res.json(data);
+    const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+	  res.render('index.pug', {
+	    fullUrl: fullUrl,
+	    data: data
+	  });
   });
 });
 
@@ -71,8 +75,7 @@ app.set('view engine', 'pug');
 app.get('*', (req, res) => {
   const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
   res.render('index.pug', {
-    fullUrl: fullUrl,
-    title: 'Image Search Abstraction Layer'
+    fullUrl: fullUrl
   });
 });
 

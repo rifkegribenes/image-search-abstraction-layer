@@ -4,7 +4,7 @@ html
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    title #{title}
+    title Image Search Abstraction Layer
     link(id='favicon', rel='icon', type='image/x-icon', href='https://cdn.hyperdev.com/us-east-1%3A52a203ff-088b-420f-81be-45bf559d01b1%2Ffavicon.ico?1469823370860')
     link(href='https://fonts.googleapis.com/css?family=Titillium+Web:300|700', rel='stylesheet')
     link(href='/style.css', rel='stylesheet')
@@ -12,31 +12,36 @@ html
 
   body
     header(class='head')
-      h1(class='header') URL Shortener Microservice
-      h2(class='subhead') FreeCodeCamp Back End Certification API project #3
+      h1(class='header') Image Search Abstraction Layer
+      h2(class='subhead') FreeCodeCamp Back End Certification API project #4
 
     main(class='container')
       div(class='row')
         div(class='card')
           h3(class='card__title') User stories:
           ul
-            li I can pass a URL as a parameter and I will receive a shortened URL in the JSON response.
-            li If I pass an invalid URL that doesn't follow the valid http://www.example.com format, the JSON response will contain an error instead.
-            li When I visit that shortened URL, it will redirect me to my original link.
-          p (Yes I recognize the irony of calling something a 'URL Shortener' and then starting with a 49-character base URL...)
+            li I can get the image URLs, alt text and page urls for a set of images relating to a given search string.
+            li I can paginate through the responses by adding a ?offset=2 parameter to the URL.
+            li I can get a list of the most recently submitted search strings.
 
       div(class='row')
         div(class='card')
           fieldset
-            input(class='input' id='urlInput' placeholder='Paste a link to shorten it')
-            button(class='card__action' id='shortenButton') shorten
-          div(id='shorten_actions')
-            span(class='info') Paste another long URL to shorten it
-            button(href='' id='clear_active_shorten' class='close' title='Clear shorten box and preview') &times;
-            input(class='copy-input' readonly='')
-            button(id='copy_shortlink' class='card__action') Copy
+            input(class='input' id='searchInput' placeholder='Search for images')
+            button(class='card__action' id='searchButton') search
+          div(id='search_actions')
+            span(class='info') Search again
+            button(href='' id='clear_search' class='close' title='Clear input and preview') &times;
+
+      if data
+        div(class='row')
+        div(class='card results' id="results")
+          each item in data
+            img(src= item.thumbnail class='image')
+      else
+        p No results
 
     footer(class='foot')
       div(class='icon__wrap')
-        a(class='github' href='https://github.com/rifkegribenes/url-shortener-ms' target="_blank")
+        a(class='github' href='https://github.com/rifkegribenes/image-search-abstraction-layer' target="_blank")
           img(class='github' src='https://cdn.glitch.com/22a70955-ef8c-44b6-9fd7-5377da7be776%2Ficon-github.png?1516058791588' alt='view code on github')

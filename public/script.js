@@ -2,67 +2,61 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // get refs to elements
-  const urlInput = document.getElementById('urlInput');
-  const shortenButton = document.getElementById('shortenButton');
-  const shorten_actions = document.getElementById('shorten_actions');
+  const searchInput = document.getElementById('searchInput');
+  const searchButton = document.getElementById('searchButton');
+  const search_actions = document.getElementById('search_actions');
   let apiLink;
 
-  const copyIt = () => {
-    const selectedText = window.getSelection().toString();
-    const copySuccess = document.execCommand('copy');
-    if (copySuccess) {
-      console.log('copySuccess');
-      urlInput.classList.remove('selected');
-      urlInput.classList.add('success');
-      urlInput.value = 'Shortened URL copied to clipboard :)';
-      console.log(urlInput.value);
-    }
-  };
-
   const clearInput = () => {
-    urlInput.value = '';
-    urlInput.classList.remove('selected', 'error', 'success');
-    shorten_actions.classList.remove('visible');
-    shortenButton.classList.remove('hidden');
+    searchInput.value = '';
+    searchInput.classList.remove('selected', 'error', 'success');
   }
 
-  const getShortenedLink = () => {
-    // get value of original link to call API
+  const search = () => {
+    // get search term to call API
     const Root_Url = window.location.origin;
-    const urlToShorten = document.getElementById('urlInput').value;
-    apiLink = `${Root_Url}/new/${urlToShorten}`;
+    const searchTerm = document.getElementById('searchInput').value;
+    apiLink = `${Root_Url}/api/search/${searchTerm}?offset=10`;
+    console.log(apiLink);
+    window.location.href = apiLink;
 
-    // call API to get shortened link
-    fetch(apiLink)
-      .then(res => res.json())
-      .then((data) => {
-        // handle invalid URLs client side
-        if (data.shorterUrl === 'Invalid URL') {
-          urlInput.value = `Invalid URL: ${data.originalUrl}`;
-          urlInput.classList.add('error');
-          shorten_actions.classList.add('visible');
-          const close = document.getElementById('clear_active_shorten');
-          close.addEventListener("click", clearInput);
-          return;
-        }
-        const shortenedLink = `${Root_Url}/${data.shorterUrl}`;
-        urlInput.value = shortenedLink;
-        urlInput.focus();
-        urlInput.setSelectionRange(0, urlInput.value.length);
-        urlInput.classList.add('selected');
-        shorten_actions.classList.add('visible');
-        const close = document.getElementById('clear_active_shorten');
-        const copy = document.getElementById('copy_shortlink');
-        close.addEventListener("click", clearInput);
-        copy.addEventListener("click", copyIt);
-        shortenButton.classList.add('hidden');
-        }
-      )
-      .catch((err) => {
-          console.log(err);
-      });
+    // // call API
+    // fetch(apiLink)
+    //   .then(res => {
+    //     console.log(res.body);
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     console.log(data);
+    //     // handle errors client side
+    //     if (data.error) {
+    //       searchInput.value = `${data.error}`;
+    //       searchInput.classList.add('error');
+    //       search_actions.classList.add('visible');
+    //       const close = document.getElementById('clear_search');
+    //       close.addEventListener("click", clearInput);
+    //       return;
+    //     }
+
+    //     // display results
+    //     const shortenedLink = `${Root_Url}/${data.shorterUrl}`;
+    //     urlInput.value = shortenedLink;
+    //     urlInput.focus();
+    //     urlInput.setSelectionRange(0, urlInput.value.length);
+    //     urlInput.classList.add('selected');
+    //     shorten_actions.classList.add('visible');
+    //     const close = document.getElementById('clear_active_shorten');
+    //     const copy = document.getElementById('copy_shortlink');
+    //     close.addEventListener("click", clearInput);
+    //     copy.addEventListener("click", copyIt);
+    //     shortenButton.classList.add('hidden');
+    //     }
+    //   )
+    //   .catch((err) => {
+    //       console.log(err);
+    //   });
 
   }
 
-  shortenButton.addEventListener("click", getShortenedLink);
+  searchButton.addEventListener("click", search);
 });
