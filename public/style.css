@@ -28,6 +28,12 @@ header {
   font-weight: 300;
 }
 
+.center {
+  text-align: center;
+  color: white;
+  width: 100%;
+}
+
 .row {
   display: flex;
   justify-content: space-between;
@@ -177,30 +183,19 @@ footer {
   color: #38ef7d;
 }
 
+#no_results {
+  display: none;
+}
+
 .visible {
   display: block !important;
 }
 
-#shorten_actions {
-  display: none;
-  position: relative;
-  top: -60px;
-  left: -2px;
-}
-
-#shortened_info, #shortened_url, .info {
-  display: none;
-}
-
 .info {
+  display:none;
   position: absolute;
   top: 20px;
   right: 160px;
-}
-
-.copy-input {
-  position: absolute;
-  left: -10000px;
 }
 
 .error {
@@ -216,8 +211,15 @@ footer {
 }
 
 .results {
-  display: flex;
+  column-count: 4;
+  column-gap: 1em;
 /*  display: none;*/
+}
+
+.image {
+  display: inline-block;
+  margin: 0 0 1em;
+  width: 100%;
 }
 
 @media (max-width: 480px) {

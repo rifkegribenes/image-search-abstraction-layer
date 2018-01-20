@@ -25,7 +25,7 @@ module.exports = (query, offset, callback) => {
            "thumbnail" : item.image.thumbnailLink,
            "context" : item.image.contextLink
           }});
-        return callback(items);
+        return callback({"searchTerm": query, items});
     })
     .catch((err) => {
       console.log(err);

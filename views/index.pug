@@ -11,37 +11,36 @@ html
     script(src='/script.js')
 
   body
-    header(class='head')
-      h1(class='header') Image Search Abstraction Layer
-      h2(class='subhead') FreeCodeCamp Back End Certification API project #4
+    header.head
+      h1.header Image Search Abstraction Layer
+      h2.subhead FreeCodeCamp Back End Certification API project #4
 
-    main(class='container')
-      div(class='row')
-        div(class='card')
-          h3(class='card__title') User stories:
+    main.container
+      div.row
+        div.card
+          h3.card__title User stories:
           ul
             li I can get the image URLs, alt text and page urls for a set of images relating to a given search string.
             li I can paginate through the responses by adding a ?offset=2 parameter to the URL.
             li I can get a list of the most recently submitted search strings.
 
-      div(class='row')
-        div(class='card')
+      div.row
+        div.card
           fieldset
-            input(class='input' id='searchInput' placeholder='Search for images')
-            button(class='card__action' id='searchButton') search
-          div(id='search_actions')
-            span(class='info') Search again
-            button(href='' id='clear_search' class='close' title='Clear input and preview') &times;
+            input#searchInput.input(placeholder='Search for images')
+            button#searchButton.card__action search
 
-      if data
-        div(class='row')
-        div(class='card results' id="results")
-          each item in data
-            img(src= item.thumbnail class='image')
-      else
-        p No results
+      div.row
+        if data && data.items && data.items.length
+          h3.subhead.center Search results for "#{data.searchTerm}"
+          #results.card.results
+            each item in data.items
+              a(href=item.url target="_blank")
+                img.image(src=item.thumbnail alt=item.snippet title=item.snippet)
+        else
+          h3#no_results.subhead.center No results
 
-    footer(class='foot')
-      div(class='icon__wrap')
-        a(class='github' href='https://github.com/rifkegribenes/image-search-abstraction-layer' target="_blank")
-          img(class='github' src='https://cdn.glitch.com/22a70955-ef8c-44b6-9fd7-5377da7be776%2Ficon-github.png?1516058791588' alt='view code on github')
+    footer.foot
+      div.icon__wrap
+        a.github(href='https://github.com/rifkegribenes/image-search-abstraction-layer' target="_blank")
+          img.github(src='https://cdn.glitch.com/22a70955-ef8c-44b6-9fd7-5377da7be776%2Ficon-github.png?1516058791588' alt='view code on github')
