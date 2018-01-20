@@ -1,0 +1,27 @@
+{
+  "name": "image-search-abstraction-layer",
+  "version": "1.0.0",
+  "description": "Image Search Abstractio Layer (FreeCodeCamp Project)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rifkegribenes/image-search-abstraction-layer.git"
+  },
+  "author": "Sarah Schneider",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rifkegribenes/image-search-abstraction-layer/issues"
+  },
+  "homepage": "https://github.com/rifkegribenes/image-search-abstraction-layer#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "mongoose": "^5.0.0",
+    "node-bing-api": "^3.2.2"
+  }
+}
