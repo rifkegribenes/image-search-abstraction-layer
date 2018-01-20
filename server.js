@@ -1,99 +1,82 @@
 // server.js
 
-// init project
+/* ================== SETUP ================== */
+
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const Bing = require('node-bing-api')({accKey: 'fb2f8724d1b54c23a86e066103ea0c6e'});
+const http = require('http');
 
+const search = require('./search');
+const searchTerm = require('./models/searchTerm');
 
 app.use(bodyParser.json());
 app.use(cors());
 
-// call API with required & optional params
-app.get('/api/imagesearch/:searchVal*', (req, res, next) => {
-	const { searchVal } = req.params;
-	const { offset } = req.query;
+app.use('/static', express.static(__dirname + '/public'));
 
-	res.json({
-		searchVal,
-		offset
+
+/* ================== DB CONNECTION ================== */
+
+const MONGODB_URI = null;
+// `mongodb://${process.env.USER}:${process.env.PASS}@${process.env.HOST}:${process.env.DB_PORT}/${process.env.DB}` || null;
+
+// connect to DB
+mongoose.connect('mongodb://localhost/searchTerms');
+
+mongoose.Promise = global.Promise;
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+/* ================== ROUTES ================== */
+
+// get all recent search terms
+app.get('/api/recentsearches', (req, res, next) => {
+	searchTerm.find({}, (err, data) => {
+		if (err) {
+			data.error = 'Could not find recent search terms';
+		}
+		res.json(data);
 	});
 });
 
-// const MONGODB_URI=`mongodb://${process.env.USER}:${process.env.PASS}@${process.env.HOST}:${process.env.DB_PORT}/${process.env.DB}`;
+// new image search
+app.get('/api/search/:searchVal*', (req, res, next) => {
+	const { searchVal } = req.params;
+	const { offset } = req.query;
 
-// // connect to DB
-// mongoose.connect(MONGODB_URI);
+	const data = new searchTerm({
+		searchVal,
+		searchDate: new Date()
+	});
 
-// mongoose.Promise = global.Promise;
+	data.save(err => {
+		if (err) {
+			console.log(`Error Saving to database: ${err}`);
+		}
+	});
 
-// const db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+	search(searchVal, offset, (data) => {
+    res.json(data);
+  });
+});
 
-// // create DB entry
-// app.get('/new/:originalUrl(*)', (req, res, next) => {
-// 	const { originalUrl } = req.params;
+// static route (index)
+app.set('view engine', 'pug');
 
-// 	// regex to test for valid url
-// 	const regex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+app.get('*', (req, res) => {
+  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  res.render('index.pug', {
+    fullUrl: fullUrl,
+    title: 'Image Search Abstraction Layer'
+  });
+});
 
-// 	if (regex.test(originalUrl) === true) {
-// 		const shorterUrl = shortid.generate();
-// 		const data = new shortUrl(
-// 			{
-// 				originalUrl,
-// 				shorterUrl
-// 			});
-// 		data.save(err => {
-// 			if (err) {
-// 				console.log(`Error saving to database: ${err}`);
-//         return;
-// 			}
-// 		});
-// 		return res.json(data);
-// 	} else {
-// 		const data = new shortUrl({
-// 			originalUrl,
-// 			shorterUrl: 'Invalid URL'
-// 		})
-// 		return res.json(data);
-// 	}
-// });
-
-// app.use(express.static('public'));
-
-// // Query db and forward to original URL
-// app.get('/:shorterUrl', (req, res, next) => {
-// 	const { shorterUrl } = req.params;
-// 	shortUrl.findOne({'shorterUrl': shorterUrl}, (err, data) => {
-// 		if (err) {
-// 			return res.send('Error reading database');
-// 		}
-// 		// check if we need to add http to the saved url
-// 		const regex = new RegExp("^(http|https)://", "i");
-// 		const { originalUrl } = data;
-// 		if (regex.test(originalUrl)) {
-// 			res.redirect(301, originalUrl);
-// 		} else {
-// 			res.redirect(301, `http://${originalUrl}`);
-// 		}
-// 	})
-// });
-
-
-// app.set('view engine', 'pug');
-
-// app.get('*', (req, res) => {
-//   const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-//   res.render('index.pug', {
-//     fullUrl: fullUrl,
-//     title: 'URL Shortener Microservice'
-//   });
-// });
-
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Server listening on localhost:${port}`));
+const server = http.createServer(app);
+const port = process.env.PORT || 8080;
+app.set('port', port);
+server.listen(port, () => console.log(`Server listening on localhost:${port}`));
