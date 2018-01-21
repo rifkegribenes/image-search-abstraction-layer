@@ -9,14 +9,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const http = require('http');
+const path   = require('path');
 
 const search = require('./search');
 const searchTerm = require('./models/searchTerm');
 
 app.use(bodyParser.json());
 app.use(cors());
-
-app.use(express.static('public'));
 
 
 /* ================== DB CONNECTION ================== */
@@ -64,24 +63,27 @@ app.get('/api/search/:searchVal*', (req, res, next) => {
     const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
     const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}${req.path}`;
     const error = data.error;
-	  res.render('index.pug', {
-	    fullUrl,
-	    baseUrl,
-	    data,
-	    error
-	  });
+    res.json(data);
+	  // res.render('index.pug', {
+	  //   fullUrl,
+	  //   baseUrl,
+	  //   data,
+	  //   error
+	  // });
   });
 });
 
-// static route (index)
-app.set('view engine', 'pug');
 
-app.get('*', (req, res) => {
-  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-  res.render('index.pug', {
-    fullUrl: fullUrl
-  });
-});
+// set static path
+app.use(express.static(path.join(__dirname, '/client/build/')));
+// app.set('view engine', 'pug');
+
+// app.get('/', (req, res) => {
+//   const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+//   res.render('index.pug', {
+//     fullUrl: fullUrl
+//   });
+// });
 
 const server = http.createServer(app);
 const port = process.env.PORT || 8080;
