@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
+import axios from 'axios';
+import './App.css';
 
-class About extends React.Component {
-
+class App extends Component {
   constructor(props) {
     super(props);
 
@@ -14,11 +15,34 @@ class About extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+
+  }
+
+  onChange(e) {
+    const newState = { ...this.state }
+    newState.searchTerm = e.target.value;
+    this.setState(newState);
+  }
+
+  search() {
+    // for local testing; change this to glitch root URL when deployed
+    const rootUrl = 'localhost:8080';
+
+    console.log('search');
+    const searchTerm = this.state.searchTerm;
+    axios.get(`${rootUrl}/search/${searchTerm}?offset=1`)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   render() {
     return (
-      <div>
+      <div className="App">
         <header className="head">
           <h1 className="header">
             Image Search Abstraction Layer
@@ -41,8 +65,19 @@ class About extends React.Component {
           <div className="row">
             <div className="card">
               <fieldset>
-                <input className="input" id="searchInput" placeholder="Search for images" />
-                <button className="card__action" id="searchButton">search</button>
+                <input
+                  className="input"
+                  id="searchInput"
+                  placeholder="Search for images"
+                  onChange={e => this.onChange(e)}
+                />
+                <button
+                  className="card__action"
+                  id="searchButton"
+                  onClick={() => this.search()}
+                  >
+                  search
+                </button>
               </fieldset>
             </div>
           </div>
@@ -52,7 +87,7 @@ class About extends React.Component {
         </main>
         <footer className="foot">
           <div className="icon__wrap">
-            <a className="github" href="https://github.com/rifkegribenes/image-search-abstraction-layer" target="_blank">
+            <a className="github" href="https://github.com/rifkegribenes/image-search-abstraction-layer" target="_blank" rel="noopener noreferrer">
               <img className="github" src="https://cdn.glitch.com/22a70955-ef8c-44b6-9fd7-5377da7be776%2Ficon-github.png?1516058791588" alt="view code on github" />
             </a>
           </div>

@@ -30,8 +30,16 @@ module.exports = {
     host: 'localhost',
     port: '3000',
     hot: true,
+    contentBase: '../dist/',
+    historyApiFallback: true,
+    publicPath: '/',
     headers: {
       'Access-Control-Allow-Origin': '*',
+    },
+    stats: {
+      colors: true,
+      chunks: false,
+      'errors-only': true
     },
   },
   entry: [
@@ -60,7 +68,7 @@ module.exports = {
   },
   output: {
     filename: 'index.js',
-    path: path.join(__dirname, '/build'),
+    path: __dirname + "/app/dist/",
   },
   plugins: dev ?
   [
