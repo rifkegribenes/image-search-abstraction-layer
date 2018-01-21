@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // get search term to call API
     const Root_Url = window.location.origin;
     const searchTerm = document.getElementById('searchInput').value;
-    apiLink = `${Root_Url}/api/search/${searchTerm}?offset=10`;
+    apiLink = `${Root_Url}/api/search/${searchTerm}?offset=1`;
     console.log(apiLink);
     window.location.href = apiLink;
     no_results.classList.add('visible');

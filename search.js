@@ -19,6 +19,9 @@ module.exports = (query, offset, callback) => {
   })
     .then((results) => {
         // console.log(results.items);
+        if (!results.items || !results.items.length) {
+          return callback({error: `Error searching for "${query}": No Results`});
+        }
         const items = results.items.map(item => {
           return {
            "url" : item.link,
@@ -29,7 +32,9 @@ module.exports = (query, offset, callback) => {
         return callback({query, offset, items});
     })
     .catch((err) => {
-      console.log(err);
-      return callback({error: `Error searching for "${query}": ${err}`});
+      console.log(err.error.error.message);
+      let msg;
+      if (err.error.error.code === 403) { msg = 'Daily search limit exceeded'}
+      return callback({error: `Error searching for "${query}": ${msg ? msg : err.error.error.message}`});
     });
 };

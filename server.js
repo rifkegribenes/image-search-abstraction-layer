@@ -63,10 +63,12 @@ app.get('/api/search/:searchVal*', (req, res, next) => {
 	search(searchVal, offset, (data) => {
     const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
     const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}${req.path}`;
+    const error = data.error;
 	  res.render('index.pug', {
-	    fullUrl: fullUrl,
-	    baseUrl: baseUrl,
-	    data: data
+	    fullUrl,
+	    baseUrl,
+	    data,
+	    error
 	  });
   });
 });

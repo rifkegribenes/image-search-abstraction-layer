@@ -222,6 +222,28 @@ footer {
   width: 100%;
 }
 
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  width: 100%;
+  color: white;
+  margin: 10px 0;
+}
+
+.arrow {
+  text-decoration: none;
+  color: rgba(255, 255, 255, .7);
+}
+
+.arrow:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+.disabled {
+  color: rgba(255, 255, 255, .4);
+}
+
 @media (max-width: 480px) {
   #copy_shortlink, #shortenButton, .card__action {
     position: static;
