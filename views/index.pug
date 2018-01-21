@@ -32,11 +32,16 @@ html
 
       div.row
         if data && data.items && data.items.length
-          h3.subhead.center Search results for "#{data.searchTerm}"
+          h3.subhead.center Search results for "#{data.query}"
           #results.card.results
             each item in data.items
               a(href=item.url target="_blank")
                 img.image(src=item.thumbnail alt=item.snippet title=item.snippet)
+            if +data.offset > 10
+              a#prev.arrow(href=`${baseUrl}?offset=${+data.offset - 10}` alt="previous 10 results" title="previous 10 results")
+                div.prev &#9664;
+            a#next.arrow(href=`${baseUrl}?offset=${+data.offset + 10}` alt="next 10 results" title="next 10 results")
+              div.next &#9654;
         else
           h3#no_results.subhead.center No results
 

@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById('searchInput');
   const searchButton = document.getElementById('searchButton');
   const no_results = document.getElementById('no_results');
+  const next = document.getElementById('prev');
+  const prev = document.getElementById('next');
   let apiLink;
 
   const clearInput = () => {
