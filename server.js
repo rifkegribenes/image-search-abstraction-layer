@@ -53,7 +53,6 @@ app.get('/api/search/:searchVal*', (req, res, next) => {
 
 	const { searchVal } = req.params;
 	const { offset } = req.query;
-	console.log(`********* GET REQUEST: ${searchVal} ***************`);
 
 	const data = new searchTerm({
 		searchVal,
@@ -67,17 +66,9 @@ app.get('/api/search/:searchVal*', (req, res, next) => {
 	});
 
 	search(searchVal, offset, (data) => {
-		console.log(`********* SEARCH: ${searchVal} ***************`);
-    const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
     const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}${req.path}`;
-    const error = data.error;
+    data.baseUrl = baseUrl;
     res.json(data);
-	  // res.render('index.pug', {
-	  //   fullUrl,
-	  //   baseUrl,
-	  //   data,
-	  //   error
-	  // });
   });
 });
 

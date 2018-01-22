@@ -26,6 +26,7 @@ header {
 
 .header, .subhead {
   font-weight: 300;
+  width: 100%;
 }
 
 .center {
@@ -167,7 +168,7 @@ footer {
 }
 
 .close {
-  color: #1a2a6c;
+  color: gray;
   text-decoration: none;
   position: absolute;
   top: 13px;
@@ -180,7 +181,7 @@ footer {
 }
 
 .close:hover {
-  color: #38ef7d;
+  color: lightgray;
 }
 
 #no_results {
@@ -199,7 +200,7 @@ footer {
 }
 
 .error {
-  color: red;
+  color: darkred;
 }
 
 .hidden {
@@ -248,15 +249,25 @@ ul {
 	text-align: left;
 }
 
+#search_actions {
+	position: relative;
+  top: -80px;
+  left: 19px;
+}
+
+.gray {
+	color: darkgray;
+}
+
 @media (max-width: 480px) {
-  #copy_shortlink, #shortenButton, .card__action {
+  #searchButton, .card__action {
     position: static;
     margin-top: 20px;
     width: 100%;
     border-radius: 3px;
   }
 
-  #shorten_actions {
+  #search_actions {
     position: relative;
     top: 0px;
     left: 0px;
