@@ -10,14 +10,29 @@ class App extends Component {
       searchTerm: '',
       activeSearch: false,
       page: 1,
+      response: ''
     };
 
     this.onChange = this.onChange.bind(this);
   }
 
-  componentDidMount() {
 
+
+  componentDidMount() {
+    this.callApi()
+      .then(res => this.setState({ response: res.express }))
+      .catch(err => console.log(err));
   }
+
+  callApi = async () => {
+    const rootUrl = 'http://localhost:8080';
+    const response = await fetch(`${rootUrl}/api/recent`);
+    const body = await response.json();
+
+    if (response.status !== 200) throw Error(body.message);
+
+    return body;
+  };
 
   onChange(e) {
     const newState = { ...this.state }
@@ -27,12 +42,12 @@ class App extends Component {
 
   search() {
     // for local testing; change this to glitch root URL when deployed
-    const rootUrl = 'localhost:8080';
-
-    console.log('search');
+    const rootUrl = 'http://localhost:8080';
     const searchTerm = this.state.searchTerm;
-    axios.get(`${rootUrl}/search/${searchTerm}?offset=1`)
+    console.log(`search: ${searchTerm}`);
+    axios.get(`${rootUrl}/api/search/${searchTerm}?offset=1`)
       .then((response) => {
+        console.log('anything???');
         console.log(response);
       })
       .catch((error) => {
@@ -44,6 +59,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="head">
+          <p>{this.state.response}</p>
           <h1 className="header">
             Image Search Abstraction Layer
           </h1>

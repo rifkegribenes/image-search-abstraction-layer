@@ -16,6 +16,11 @@ const searchTerm = require('./models/searchTerm');
 
 app.use(bodyParser.json());
 app.use(cors());
+// app.use((req, res, next) => {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
 
 
 /* ================== DB CONNECTION ================== */
@@ -45,8 +50,10 @@ app.get('/api/recent', (req, res, next) => {
 
 // new image search
 app.get('/api/search/:searchVal*', (req, res, next) => {
+
 	const { searchVal } = req.params;
 	const { offset } = req.query;
+	console.log(`********* GET REQUEST: ${searchVal} ***************`);
 
 	const data = new searchTerm({
 		searchVal,
@@ -60,6 +67,7 @@ app.get('/api/search/:searchVal*', (req, res, next) => {
 	});
 
 	search(searchVal, offset, (data) => {
+		console.log(`********* SEARCH: ${searchVal} ***************`);
     const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
     const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}${req.path}`;
     const error = data.error;
