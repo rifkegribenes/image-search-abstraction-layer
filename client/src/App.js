@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+
+import Loader from './Loader';
 import './App.css';
 
 class App extends Component {
@@ -14,7 +16,8 @@ class App extends Component {
       recent: '',
       error: false,
       errorMsg: '',
-      preview: false
+      preview: false,
+      loading: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -59,6 +62,7 @@ class App extends Component {
     }
     const newState = { ...this.state }
     newState.activeSearch = true;
+    newState.loading = true;
     this.setState(newState, () => {
       axios.get(`${rootUrl}/api/search/${searchTerm}?offset=${offset}`)
       .then((resp) => {
@@ -67,11 +71,13 @@ class App extends Component {
         newState.data = { ...resp.data };
         if (!newState.data.items.length) {
           newState.error = true;
+          newState.loading = false;
           newState.errorMsg = 'Sorry, no Results :(';
         }
         this.setState(newState, () => {
           const newState = { ...this.state }
           newState.preview = true;
+          newState.loading = false;
           this.setState(newState);
         });
       })
@@ -100,6 +106,7 @@ class App extends Component {
     }
     return (
       <div className="App">
+        {this.state.loading && <Loader />}
         <header className="head">
           <h1 className="header">
             Image Search Abstraction Layer
