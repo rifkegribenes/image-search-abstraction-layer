@@ -10,7 +10,6 @@ const path   = require('path');
 /* ============================ ROUTE HANDLERS ============================= */
 
 // SERVE CLIENT SPA
-//
 const serveClient = (req, res) => {
   console.log('serveClient');
   res.status(200)

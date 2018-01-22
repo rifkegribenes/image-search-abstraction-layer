@@ -51,16 +51,18 @@ class App extends Component {
     this.setState(newState);
   }
 
-  search() {
+  search(searchTerm, offset) {
     // for local testing; change this to glitch root URL when deployed
     const rootUrl = 'http://localhost:8080';
-    const searchTerm = this.state.searchTerm;
+    if (!offset) {
+      offset = 1;
+    }
     const newState = { ...this.state }
     newState.activeSearch = true;
     this.setState(newState, () => {
-      axios.get(`${rootUrl}/api/search/${searchTerm}?offset=1`)
+      axios.get(`${rootUrl}/api/search/${searchTerm}?offset=${offset}`)
       .then((resp) => {
-        console.log(resp.data);
+        // console.log(resp.data);
         const newState = { ...this.state }
         newState.data = { ...resp.data };
         if (!newState.data.items.length) {
@@ -87,11 +89,11 @@ class App extends Component {
 
   render() {
     const { activeSearch, error, errorMsg } = this.state;
-    const { query, offset, baseUrl, items } = this.state.data;
+    const { query, offset, items } = this.state.data;
     let thumbnails;
-    if (items) {
-      thumbnails = items.map(item => (
-          <a href={item.url} target="_blank" rel="noopener noreferrer" title={item.snippet} key={item.id}>
+    if (this.state.data.items) {
+      thumbnails = this.state.data.items.map(item => (
+          <a href={item.context} target="_blank" rel="noopener noreferrer" title={item.snippet} key={item.id}>
             <img className="image" src={item.thumbnail} alt={item.snippet} />
           </a>
         ));
@@ -99,7 +101,6 @@ class App extends Component {
     return (
       <div className="App">
         <header className="head">
-          <p>{this.state.response}</p>
           <h1 className="header">
             Image Search Abstraction Layer
           </h1>
@@ -131,7 +132,7 @@ class App extends Component {
                 <button
                   className="card__action"
                   id="searchButton"
-                  onClick={() => this.search()}
+                  onClick={() => this.search(this.state.searchTerm, 1)}
                   >
                   search
                 </button>
@@ -151,33 +152,36 @@ class App extends Component {
               <h3 className="subhead center">
                 { this.state.preview ? `Search results for ${query}` : "Loading..." }
               </h3>
-              { this.state.preview &&
+              {this.state.preview &&
+                <div className="navigation">
+                  <button
+                    id="prev"
+                    className={this.state.data.offset > 1 ? 'arrow' : 'arrow disabled'}
+                    disabled={this.state.data.offset ===1}
+                    onClick={() => {
+                      if (this.state.data.offset > 1) {
+                        this.search(query, +offset - 1);
+                      }
+                    }}
+                  >
+                    <div className="prev">&#9664; Previous page</div>
+                  </button>
+                  <button
+                    id="next"
+                    className="arrow"
+                    onClick={() => this.search(query, +offset + 1)}
+                  >
+                    <div className="next">Next page &#9654;</div>
+                  </button>
+                </div>
+              }
+              {this.state.preview &&
                 <div id="results" className={error ? 'card' : 'card results'}>
                   {items.length ? thumbnails :
                     <div className="center error">
                       {errorMsg || 'No results'}
                     </div>
                   }
-                  {offset > 10 &&
-                    <a
-                      id="prev"
-                      className="arrow"
-                      href={`${baseUrl}?offset=${+offset - 10}`}
-                      alt="previous 10 results"
-                      title="previous 10 results"
-                    >
-                      <div className="prev"> &#9664; </div>
-                    </a>
-                  }
-                  <a
-                    id="next"
-                    className="arrow"
-                    href={`${baseUrl}?offset=${+offset + 10}`}
-                    alt="next 10 results"
-                    title="next 10 results"
-                  >
-                    <div className="next"> &#9654; </div>
-                  </a>
                 </div>
               }
             </div>

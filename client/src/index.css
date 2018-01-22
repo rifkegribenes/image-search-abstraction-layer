@@ -168,11 +168,11 @@ footer {
 }
 
 .close {
-  color: gray;
+  color: lightgray;
   text-decoration: none;
   position: absolute;
-  top: 13px;
-  right: 140px;
+  top: 31px;
+  right: 147px;
   font-size: 1.5em;
   appearance: none;
   -webkit-appearance: none;
@@ -181,7 +181,7 @@ footer {
 }
 
 .close:hover {
-  color: lightgray;
+  color: lightblue;
 }
 
 #no_results {
@@ -233,16 +233,27 @@ footer {
 }
 
 .arrow {
-  text-decoration: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: 0;
   color: rgba(255, 255, 255, .7);
 }
 
 .arrow:hover {
   color: rgba(255, 255, 255, 1);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: 0;
 }
 
 .disabled {
-  color: rgba(255, 255, 255, .4);
+  color: rgba(255, 255, 255, .2);
+}
+
+.disabled:hover {
+	color: rgba(255, 255, 255, .2);
 }
 
 ul {

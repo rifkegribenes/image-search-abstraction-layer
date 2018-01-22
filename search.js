@@ -11,12 +11,12 @@ module.exports = (query, offset, callback) => {
       api_key: FLICKR_API_KEY,
       tags: query.replace(" ", "+"),
       per_page: 10,
-      pages: 1,
+      page: offset,
       format: 'json',
       content_type: 1,
-      start: offset || 1,
       nojsoncallback: 1,
-      safe_search: 1
+      safe_search: 1,
+      sort: 'relevance'
     },
     json: true
   })
