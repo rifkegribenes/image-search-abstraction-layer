@@ -42,7 +42,7 @@ class App extends Component {
   };
 
   onChange(e) {
-    this.getRecent();
+
     // const newState = { ...this.state }
     // newState.searchTerm = e.target.value;
     // this.setState(newState);
@@ -62,6 +62,7 @@ class App extends Component {
     newState.error = false;
     newState.activeSearch = false;
     newState.preview = false;
+    newState.recent = null;
     this.setState(newState);
   }
 
@@ -76,6 +77,12 @@ class App extends Component {
         });
       })
       .catch(err => console.log(err));
+  }
+
+  close() {
+    const newState = { ...this.state }
+    newState.recent = null;
+    this.setState(newState);
   }
 
   search(searchTerm, offset) {
@@ -176,7 +183,18 @@ class App extends Component {
                   onClick={() => this.clearInput()}
                 >&times;</button>
               </div>
-              {this.state.recent &&
+              <button
+                className="get-recent"
+                onClick={() => {
+                  if (!this.state.recent) {
+                    this.getRecent();
+                  } else {
+                    this.close();
+                  }
+                }}
+              >{this.state.recent && !this.state.preview ? 'Hide Recent Searches' : 'Show Recent Searches'}
+              </button>
+              {this.state.recent && !this.state.preview &&
                 <RecentSearches
                   items={this.state.recent}
                   search={this.search}
