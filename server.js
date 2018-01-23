@@ -20,11 +20,14 @@ app.use(cors());
 
 /* ================== DB CONNECTION ================== */
 
-const MONGODB_URI = null;
+const MONGODB_URI = `mongodb://${process.env.USER}:${process.env.PASS}@ds051990.mlab.com:51990/rg-image-search`;
 // `mongodb://${process.env.USER}:${process.env.PASS}@${process.env.HOST}:${process.env.DB_PORT}/${process.env.DB}` || null;
 
-// connect to DB
-mongoose.connect('mongodb://localhost/searchTerms');
+// connect to DB if running locally:
+// mongoose.connect('mongodb://localhost/searchTerms');
+
+// connect to mLab
+mongoose.connect(MONGODB_URI);
 
 mongoose.Promise = global.Promise;
 
@@ -45,7 +48,10 @@ app.get('/api/recent', (req, res, next) => {
       { "$sort": { "searchDate": -1 } },
     ],
     (err, data) => {
-      if (err) return handleError(err);
+      if (err) {
+        console.log(err);
+        res.send(err);
+      }
       console.log(data);
       res.json(data);
     }
