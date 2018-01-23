@@ -47,9 +47,9 @@ class App extends Component {
     const rootUrl = window.location.origin;
     axios.get(`${rootUrl}/api/recent`)
       .then((resp) => {
-        console.log(resp);
+        console.log(resp.data);
         const newState = { ...this.state }
-        newState.recent = resp;
+        newState.recent = resp.data;
         this.setState(newState);
       })
       .catch(err => console.log(err));
