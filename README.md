@@ -1,27 +1,13 @@
-Welcome to the Glitch BETA
-=========================
+## Image Search Abstraction Layer (Freecodecamp Project)
 
-Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
+### User stories:
 
-**Glitch** is the friendly community where you'll build the app of your dreams. Glitch lets you instantly create, remix, edit, and host an app, bot or site, and you can invite collaborators or helpers to simultaneously edit code with you.
+* I can get the image URLs, alt text and page urls for a set of images relating to a given search string.
 
-Find out more [about Glitch](https://glitch.com/about).
+* I can paginate through the responses by adding a ?offset=2 parameter to the URL.
 
+* I can get a list of the most recently submitted search strings.
 
-Your Project
-------------
+#### Screenshot:
 
-On the front-end,
-- edit `public/client.js`, `public/style.css` and `views/index.html`
-- drag in `assets`, like images or music, to add them to your project
-
-On the back-end,
-- your app starts at `server.js`
-- add frameworks and packages in `package.json`
-- safely store app secrets in `.env` (nobody can see this but you and people you invite)
-
-
-Made by [Fog Creek](https://fogcreek.com/)
--------------------
-
-\ ゜o゜)ノ
+![image search abstraction layer screenshot](#)

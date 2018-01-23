@@ -1,39 +1,86 @@
 // server.js
-// where your node app starts
 
-// init project
-var express = require('express');
-var app = express();
+/* ================== SETUP ================== */
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const http = require('http');
+const path   = require('path');
 
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
+const search = require('./search');
+const searchTerm = require('./models/searchTerm');
 
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/views/index.html');
+app.use(bodyParser.json());
+app.use(cors());
+
+
+/* ================== DB CONNECTION ================== */
+
+const MONGODB_URI = null;
+// `mongodb://${process.env.USER}:${process.env.PASS}@${process.env.HOST}:${process.env.DB_PORT}/${process.env.DB}` || null;
+
+// connect to DB
+mongoose.connect('mongodb://localhost/searchTerms');
+
+mongoose.Promise = global.Promise;
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+/* ================== ROUTES ================== */
+
+// get all UNIQUE search terms stored in DB, sorted by most recent date
+app.get('/api/recent', (req, res, next) => {
+
+  searchTerm.aggregate(
+    [
+      { "$group": {
+        _id: "$searchVal",
+        doc: {$first: "$$ROOT"}
+      }},
+      { "$sort": { "searchDate": -1 } },
+    ],
+    (err, data) => {
+      if (err) return handleError(err);
+      console.log(data);
+      res.json(data);
+    }
+  );
 });
 
-app.get("/dreams", function (request, response) {
-  response.send(dreams);
+// new image search
+app.get('/api/search/:searchVal*', (req, res, next) => {
+
+  const { searchVal } = req.params;
+  const { offset } = req.query;
+
+  const data = new searchTerm({
+    searchVal,
+    searchDate: new Date()
+  });
+
+  data.save(err => {
+    if (err) {
+      console.log(`Error Saving to database: ${err}`);
+    }
+  });
+
+  search(searchVal, offset, (data) => {
+    const baseUrl = `${req.protocol}://${req.get('host')}${req.baseUrl}${req.path}`;
+    data.baseUrl = baseUrl;
+    res.json(data);
+  });
 });
 
-// could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
-app.post("/dreams", function (request, response) {
-  dreams.push(request.query.dream);
-  response.sendStatus(200);
-});
 
-// Simple in-memory store for now
-var dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
-];
+// set static path
+app.use(express.static(path.join(__dirname, '/client/build/')));
 
-// listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+const server = http.createServer(app);
+const port = process.env.PORT || 8080;
+app.set('port', port);
+server.listen(port, () => console.log(`Server listening on localhost:${port}`));
