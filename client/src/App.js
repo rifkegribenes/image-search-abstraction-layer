@@ -82,6 +82,7 @@ class App extends Component {
   close() {
     const newState = { ...this.state }
     newState.recent = null;
+    newState.error = false;
     this.setState(newState);
   }
 
@@ -94,6 +95,7 @@ class App extends Component {
     const newState = { ...this.state }
     newState.activeSearch = true;
     newState.loading = true;
+    newState.error = false;
     this.setState(newState, () => {
       axios.get(`${rootUrl}/api/search/${searchTerm}?offset=${offset}`)
       .then((resp) => {
@@ -183,17 +185,19 @@ class App extends Component {
                   onClick={() => this.clearInput()}
                 >&times;</button>
               </div>
-              <button
-                className="get-recent"
-                onClick={() => {
-                  if (!this.state.recent) {
-                    this.getRecent();
-                  } else {
-                    this.close();
-                  }
-                }}
-              >{this.state.recent && !this.state.preview ? 'Hide Recent Searches' : 'Show Recent Searches'}
-              </button>
+              {!this.state.preview &&
+                <button
+                  className="get-recent"
+                  onClick={() => {
+                    if (!this.state.recent) {
+                      this.getRecent();
+                    } else {
+                      this.close();
+                    }
+                  }}
+                >{this.state.recent && !this.state.preview ? 'Hide Recent Searches' : 'Show Recent Searches'}
+                </button>
+              }
               {this.state.recent && !this.state.preview &&
                 <RecentSearches
                   items={this.state.recent}

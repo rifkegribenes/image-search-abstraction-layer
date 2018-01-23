@@ -9,7 +9,7 @@ module.exports = (query, offset, callback) => {
     uri: FLICKR_API_ENDPOINT,
     qs : {
       api_key: FLICKR_API_KEY,
-      tags: query.replace(" ", "+"),
+      tags: query.replace(" ", ","),
       per_page: 10,
       page: offset,
       format: 'json',
