@@ -20,7 +20,6 @@ class App extends Component {
       loading: false
     };
 
-    this.onChange = this.onChange.bind(this);
     this.search = this.search.bind(this);
     this.setSearchTerm = this.setSearchTerm.bind(this);
   }
@@ -40,13 +39,6 @@ class App extends Component {
     }
     return body;
   };
-
-  onChange(e) {
-
-    // const newState = { ...this.state }
-    // newState.searchTerm = e.target.value;
-    // this.setState(newState);
-  }
 
   setSearchTerm(term) {
     document.getElementById('searchInput').value = term;
@@ -72,9 +64,7 @@ class App extends Component {
       .then(res => {
         const newState = { ...this.state }
         newState.recent = res;
-        this.setState(newState, () => {
-          // console.log(this.state.recent);
-        });
+        this.setState(newState);
       })
       .catch(err => console.log(err));
   }
@@ -167,7 +157,6 @@ class App extends Component {
                   className="input"
                   id="searchInput"
                   placeholder="Search for images"
-                  onChange={() => this.onChange()}
                 />
                 <button
                   className="card__action"
@@ -203,7 +192,6 @@ class App extends Component {
                   items={this.state.recent}
                   search={this.search}
                   setSearchTerm={this.setSearchTerm}
-                  onChange={this.onChange}
                 />}
             </div>
           </div>

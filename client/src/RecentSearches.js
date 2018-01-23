@@ -11,8 +11,6 @@ const RecentSearches = (props) => {
 					<button
 						className="item__btn"
 						onClick={() => {
-							// const fakeEvent = { target: { value: item.doc.searchVal } }
-							// props.onChange(fakeEvent);
 		  				props.setSearchTerm(item.doc.searchVal);
 		  				props.search(item.doc.searchVal, 1);
 		  			}}
