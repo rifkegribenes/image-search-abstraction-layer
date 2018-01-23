@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const http = require('http');
-const path   = require('path');
+const path = require('path');
 
 const search = require('./search');
 const searchTerm = require('./models/searchTerm');
@@ -87,8 +87,9 @@ app.get('/api/search/:searchVal*', (req, res, next) => {
 app.use(express.static(path.join(__dirname, '/client/build/')));
 
 app.get('/', (req, res) => {
-  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-  res.render('index.html');
+  console.log('root route, serving client');
+  res.status(200)
+    .sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 const server = http.createServer(app);
