@@ -22,10 +22,7 @@ header {
   text-align: center;
   color: white;
   width: 100%;
-<<<<<<< HEAD
-=======
   padding-top: 10px;
->>>>>>> 3a23f543cf25cb13902030cb66cc984f8a2368a7
 }
 
 .header, .subhead {
@@ -433,12 +430,7 @@ ul {
   }
 
   .close {
-<<<<<<< HEAD
-    top: -63px;
-    right: 0px;
-=======
     top: -144px;
     right: -1px;
->>>>>>> 3a23f543cf25cb13902030cb66cc984f8a2368a7
   }
 }
