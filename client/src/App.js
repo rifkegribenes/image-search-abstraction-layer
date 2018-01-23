@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import Loader from './Loader';
+import RecentSearches from './RecentSearches';
 import './App.css';
 
 class App extends Component {
@@ -11,9 +12,8 @@ class App extends Component {
     this.state = {
       searchTerm: '',
       activeSearch: false,
-      page: 1,
       data: '',
-      recent: '',
+      recent: null,
       error: false,
       errorMsg: '',
       preview: false,
@@ -21,12 +21,11 @@ class App extends Component {
     };
 
     this.onChange = this.onChange.bind(this);
+    this.search = this.search.bind(this);
+    this.setSearchTerm = this.setSearchTerm.bind(this);
   }
 
   componentDidMount() {
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
   }
 
   callApi = async () => {
@@ -34,15 +33,27 @@ class App extends Component {
     const response = await fetch(`${rootUrl}/api/recent`);
     const body = await response.json();
 
-    if (response.status !== 200) throw Error(body.message);
-
+    if (response.status !== 200) {
+      throw Error(body.error)
+    } else {
+      // console.log(body);
+    }
     return body;
   };
 
   onChange(e) {
+    this.getRecent();
+    // const newState = { ...this.state }
+    // newState.searchTerm = e.target.value;
+    // this.setState(newState);
+  }
+
+  setSearchTerm(term) {
+    document.getElementById('searchInput').value = term;
     const newState = { ...this.state }
-    newState.searchTerm = e.target.value;
-    this.setState(newState);
+    newState.searchTerm = term;
+    console.log(newState.searchTerm);
+    this.setState({ ...newState }, () => console.log(`setSearchTerm: ${this.state.searchTerm}`));
   }
 
   clearInput = () => {
@@ -52,6 +63,19 @@ class App extends Component {
     newState.activeSearch = false;
     newState.preview = false;
     this.setState(newState);
+  }
+
+  getRecent() {
+    console.log('getRecent');
+    this.callApi()
+      .then(res => {
+        const newState = { ...this.state }
+        newState.recent = res;
+        this.setState(newState, () => {
+          // console.log(this.state.recent);
+        });
+      })
+      .catch(err => console.log(err));
   }
 
   search(searchTerm, offset) {
@@ -130,16 +154,16 @@ class App extends Component {
             <div className="card">
               <fieldset>
                 <input
+                  type="text"
                   className="input"
                   id="searchInput"
                   placeholder="Search for images"
-                  value={this.state.searchTerm}
-                  onChange={e => this.onChange(e)}
+                  onChange={() => this.onChange()}
                 />
                 <button
                   className="card__action"
                   id="searchButton"
-                  onClick={() => this.search(this.state.searchTerm, 1)}
+                  onClick={() => this.search(document.getElementById('searchInput').value, 1)}
                   >
                   search
                 </button>
@@ -152,6 +176,13 @@ class App extends Component {
                   onClick={() => this.clearInput()}
                 >&times;</button>
               </div>
+              {this.state.recent &&
+                <RecentSearches
+                  items={this.state.recent}
+                  search={this.search}
+                  setSearchTerm={this.setSearchTerm}
+                  onChange={this.onChange}
+                />}
             </div>
           </div>
           {activeSearch &&

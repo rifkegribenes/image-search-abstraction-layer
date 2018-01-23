@@ -38,14 +38,45 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 /* ================== ROUTES ================== */
 
+
 // get all recent search terms
 app.get('/api/recent', (req, res, next) => {
-	searchTerm.find({}, (err, data) => {
-		if (err) {
-			data.error = 'Could not find recent search terms';
-		}
-		res.json(data);
-	});
+
+	// searchTerm.distinct('searchVal', (err, data) => {
+	//   if (err) return handleError(err);
+	//   console.log(data);
+	//   res.json(data);
+	// });
+
+	searchTerm.aggregate(
+    [
+        // { "$match": {
+        //     "searchVal": { $regex: new RegExp( 't' ,'i') }
+        // }},
+        // Grouping pipeline
+        { "$group": {
+				    _id: "$searchVal",
+				    doc: {$first: "$$ROOT"}
+				}},
+        // Sorting pipeline
+        { "$sort": { "searchDate": -1 } },
+        // Optionally limit results
+        // { "$limit": 10 }
+    ],
+    (err, data) => {
+      if (err) return handleError(err);
+		  console.log(data);
+		  res.json(data);
+    }
+	);
+
+
+	// searchTerm.find({}, (err, data) => {
+	// 	if (err) {
+	// 		data.error = 'Could not find recent search terms';
+	// 	}
+	// 	res.json(data);
+	// });
 });
 
 // new image search
