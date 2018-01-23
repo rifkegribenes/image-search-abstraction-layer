@@ -86,6 +86,11 @@ app.get('/api/search/:searchVal*', (req, res, next) => {
 // set static path
 app.use(express.static(path.join(__dirname, '/client/build/')));
 
+app.get('/', (req, res) => {
+  const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  res.render('index.html');
+});
+
 const server = http.createServer(app);
 const port = process.env.PORT || 8080;
 app.set('port', port);
