@@ -25,7 +25,6 @@ class App extends Component {
   }
 
   callApi() {
-    // const rootUrl = 'http://localhost:8080';
     const rootUrl = window.location.origin;
     axios.get(`${rootUrl}/api/recent`)
       .then((resp) => {
@@ -76,8 +75,6 @@ class App extends Component {
   }
 
   search(searchTerm, offset) {
-    // for local testing; change this to glitch root URL when deployed
-    // const rootUrl = 'http://localhost:8080';
     const rootUrl = window.location.origin;
     console.log(rootUrl);
     if (!offset) {
