@@ -20,8 +20,7 @@ app.use(cors());
 
 /* ================== DB CONNECTION ================== */
 
-const MONGODB_URI = `mongodb://${process.env.USER}:${process.env.PASS}@ds051990.mlab.com:51990/rg-image-search`;
-// `mongodb://${process.env.USER}:${process.env.PASS}@${process.env.HOST}:${process.env.DB_PORT}/${process.env.DB}` || null;
+const MONGODB_URI = `mongodb://${process.env.USER}:${process.env.PASS}${process.env.HOST}:${process.env.DB_PORT}/{process.env.DB}`;
 
 // connect to DB if running locally:
 // mongoose.connect('mongodb://localhost/searchTerms');
@@ -86,7 +85,7 @@ app.get('/api/search/:searchVal*', (req, res, next) => {
 // set static path
 app.use(express.static(path.join(__dirname, '/client/build/')));
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   console.log('root route, serving client');
   res.status(200)
     .sendFile(path.join(__dirname, '../client/build/index.html'));
