@@ -20,7 +20,10 @@ app.use(cors());
 
 /* ================== DB CONNECTION ================== */
 
-const MONGODB_URI = `mongodb://${process.env.USER}:${process.env.PASS}${process.env.HOST}:${process.env.DB_PORT}/{process.env.DB}`;
+const MONGODB_URI = `mongodb://${process.env.USER}:${process.env.PASS}@${process.env.HOST}:${process.env.DB_PORT}/${process.env.DB}`;
+console.log(MONGODB_URI);
+// mongodb://<dbuser>:<dbpassword>@ds051990.mlab.com:51990/rg-image-search
+
 
 // connect to DB if running locally:
 // mongoose.connect('mongodb://localhost/searchTerms');
