@@ -28,8 +28,7 @@ class App extends Component {
     document.getElementById('searchInput').value = term;
     const newState = { ...this.state }
     newState.searchTerm = term;
-    console.log(newState.searchTerm);
-    this.setState({ ...newState }, () => console.log(`setSearchTerm: ${this.state.searchTerm}`));
+    this.setState({ ...newState });
   }
 
   clearInput() {
@@ -43,17 +42,15 @@ class App extends Component {
   }
 
   getRecent() {
-    console.log('getRecent');
     const rootUrl = window.location.origin;
     axios.get(`${rootUrl}/api/recent`)
       .then((resp) => {
-        console.log(resp.data);
         const newState = { ...this.state }
         newState.recent = resp.data;
         this.setState(newState);
       })
       .catch(err => console.log(err));
-    }  
+    }
 
   close() {
     const newState = { ...this.state }
@@ -64,7 +61,6 @@ class App extends Component {
 
   search(searchTerm, offset) {
     const rootUrl = window.location.origin;
-    console.log(rootUrl);
     if (!offset) {
       offset = 1;
     }
