@@ -47,17 +47,13 @@ class App extends Component {
     const rootUrl = window.location.origin;
     axios.get(`${rootUrl}/api/recent`)
       .then((resp) => {
-        const body = resp.json();
-        if (resp.status !== 200) {
-          throw Error(body.error)
-        } else {
-          const newState = { ...this.state }
-          newState.recent = resp;
-          this.setState(newState);
-        }
-    })
+        console.log(resp);
+        const newState = { ...this.state }
+        newState.recent = resp;
+        this.setState(newState);
+      })
       .catch(err => console.log(err));
-  }
+    }  
 
   close() {
     const newState = { ...this.state }
