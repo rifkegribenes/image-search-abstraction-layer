@@ -27,7 +27,7 @@ class App extends Component {
   componentDidMount() {
   }
 
-  callApi = async () => {
+  const callApi = async () => {
     const rootUrl = 'http://localhost:8080';
     const response = await fetch(`${rootUrl}/api/recent`);
     const body = await response.json();
