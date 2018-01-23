@@ -24,21 +24,20 @@ class App extends Component {
     this.setSearchTerm = this.setSearchTerm.bind(this);
   }
 
-  componentDidMount() {
-  }
-
-  const callApi = async () => {
-    const rootUrl = 'http://localhost:8080';
-    const response = await fetch(`${rootUrl}/api/recent`);
-    const body = await response.json();
-
-    if (response.status !== 200) {
-      throw Error(body.error)
-    } else {
-      // console.log(body);
-    }
+  callApi() {
+    // const rootUrl = 'http://localhost:8080';
+    const rootUrl = window.location.origin;
+    axios.get(`${rootUrl}/api/recent`)
+      .then((resp) => {
+        const body = resp.json();
+        if (resp.status !== 200) {
+          throw Error(body.error)
+        } else {
+          // console.log(body);
+        }
     return body;
-  };
+    });
+  }
 
   setSearchTerm(term) {
     document.getElementById('searchInput').value = term;
@@ -48,7 +47,7 @@ class App extends Component {
     this.setState({ ...newState }, () => console.log(`setSearchTerm: ${this.state.searchTerm}`));
   }
 
-  clearInput = () => {
+  clearInput() {
     const newState = { ...this.state }
     newState.searchTerm = '';
     newState.error = false;
@@ -78,7 +77,9 @@ class App extends Component {
 
   search(searchTerm, offset) {
     // for local testing; change this to glitch root URL when deployed
-    const rootUrl = 'http://localhost:8080';
+    // const rootUrl = 'http://localhost:8080';
+    const rootUrl = window.location.origin;
+    console.log(rootUrl);
     if (!offset) {
       offset = 1;
     }
