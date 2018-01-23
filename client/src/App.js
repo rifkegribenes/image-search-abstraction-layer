@@ -24,20 +24,6 @@ class App extends Component {
     this.setSearchTerm = this.setSearchTerm.bind(this);
   }
 
-  callApi() {
-    const rootUrl = window.location.origin;
-    axios.get(`${rootUrl}/api/recent`)
-      .then((resp) => {
-        const body = resp.json();
-        if (resp.status !== 200) {
-          throw Error(body.error)
-        } else {
-          // console.log(body);
-        }
-    return body;
-    });
-  }
-
   setSearchTerm(term) {
     document.getElementById('searchInput').value = term;
     const newState = { ...this.state }
@@ -58,12 +44,18 @@ class App extends Component {
 
   getRecent() {
     console.log('getRecent');
-    this.callApi()
-      .then(res => {
-        const newState = { ...this.state }
-        newState.recent = res;
-        this.setState(newState);
-      })
+    const rootUrl = window.location.origin;
+    axios.get(`${rootUrl}/api/recent`)
+      .then((resp) => {
+        const body = resp.json();
+        if (resp.status !== 200) {
+          throw Error(body.error)
+        } else {
+          const newState = { ...this.state }
+          newState.recent = resp;
+          this.setState(newState);
+        }
+    })
       .catch(err => console.log(err));
   }
 
